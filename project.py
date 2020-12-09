@@ -1,4 +1,4 @@
-from flask import request, url_for, render_template
+from flask import request, url_for, render_template, redirect
 from flask_api import FlaskAPI, status, exceptions
 import secrets 
 
@@ -13,7 +13,7 @@ def db_has_user(credentials):
     """
     db_has_user checks to see if a dictionary exists in this fake database.
     """
-    fake_db = [  {'user': 'jennen', 'password': 'foo'},  {'user': 'dillon', 'password': 'hi :)'}, ]
+    fake_db = [  {"user": "jennen", "password": "foo"},  {"user": "harsha", "password": "hi"}, {"user": "alec", "password": "bar"}, {"user": "rui", "password": ""} ]
     if credentials in fake_db:
         return True
     return False 
@@ -42,7 +42,7 @@ def auth_user():
 
     return {"error": "expected POST"}, status.HTTP_406_NOT_ACCEPTABLE
 
-#         ('/api/route') -> The route the user wants. 
+         
 @app.route('/api/<user>/<token>')
 def reroute(user=None, token=None):
     """
@@ -51,14 +51,18 @@ def reroute(user=None, token=None):
     if {'user': user, 'token': token} in user_token_db:
         return render_template('pro.html', user=user)
 
+@app.route('/home')
+def home():
+    return "This is the home page"
+    """A basic home route
+    """
+
+@app.route('/admin')
+def administrator():
+    return redirect(url_for('home'))
+    """This was a route we used for testing and showcasing how redirect works
+    """
+    
 if __name__ == "__main__":
     app.run(debug=True)
 
-'''
-Get the route the user wants to go to. 
-What is the location of the user - What page the user wants to navigate to and where the user is located.
-Work on the database. - MySQL, POSTGRESQL, Amazon  
-Make an HTML page that calls the API via a link or button (calls API at this 'route'). Need a login on the frontend as well as sending an HTTP request to the API -> Alec and Rui. 
-Make a front end that does NOT require a log in that has links in the page. 
-We need to set a repository on GitHub (front and back ends) for source control. 
-'''
